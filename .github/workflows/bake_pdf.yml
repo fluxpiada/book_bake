@@ -36,6 +36,8 @@ jobs:
       # 2. Install Pandoc, XeLaTeX and a Times-metric font
       #    Liberation Serif / Mono stand in for Times New Roman / Courier New;
       #    bake_book_pdf.sh probes for whichever is present.
+      #    texlive-plain-generic is where Ubuntu puts ulem.sty, which
+      #    shunn.latex loads for Classic underlining. Without it: no PDF.
       - name: Install Pandoc and TeX
         run: |
           sudo apt-get update
@@ -44,6 +46,7 @@ jobs:
             texlive-xetex \
             texlive-latex-recommended \
             texlive-latex-extra \
+            texlive-plain-generic \
             texlive-fonts-recommended \
             fonts-liberation \
             poppler-utils
