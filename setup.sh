@@ -48,10 +48,6 @@ done
 # The language code names a folder, so keep it to lowercase letters and hyphens.
 LANGCODE=$(printf '%s' "$LANGCODE" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z-')
 [[ -n "$LANGCODE" ]] || LANGCODE="en"
-if [[ "$LANGCODE" != "en" && -e "manuscript/$LANGCODE" ]]; then
-  echo "❌ manuscript/$LANGCODE already exists — move it aside and run again." >&2
-  exit 1
-fi
 
 # Filesystem-safe name for build output: spaces to underscores, drop the rest.
 SLUG=$(printf '%s' "$TITLE" | tr ' ' '_' | tr -cd '[:alnum:]_-')
@@ -74,9 +70,17 @@ fi
 DESC="Download the ePub of $TITLE."
 RIGHTS="© $(date +%Y) $AUTHOR"
 
-# The sample manuscript ships as English; rename its folder to your language.
-[[ "$LANGCODE" != "en" ]] && mv manuscript/en "manuscript/$LANGCODE"
+# The sample manuscript ships as manuscript/en/; rename it to your language.
+# If you already made a folder for your language, both are left as they are.
+if [[ "$LANGCODE" != "en" && -d manuscript/en && ! -e "manuscript/$LANGCODE" ]]; then
+  mv manuscript/en "manuscript/$LANGCODE"
+fi
+
+# The files that carry placeholders: the page, and your title page if you
+# have one yet.
+FILL=(index.html)
 TITLE_PAGE="manuscript/$LANGCODE/front/10_title.md"
+[[ -f "$TITLE_PAGE" ]] && FILL+=("$TITLE_PAGE")
 
 # Values reach perl through the environment rather than by being pasted into
 # the script text. That way a quote or a backslash in someone's name cannot
@@ -92,7 +96,7 @@ perl -pi -e '
   s/__GH_OWNER__/$ENV{OWNER}/g;
   s/__GH_REPO__/$ENV{REPO}/g;
   s/__UUID__/$ENV{UUID}/g;
-' index.html "$TITLE_PAGE"
+' "${FILL[@]}"
 
 perl -pi -e '
   s/^title:.*/title:       "$ENV{TITLE}"/;
@@ -114,11 +118,13 @@ perl -pi -e '
 # None of the files this script fills in may still hold a placeholder.
 # (setup.sh and lib/book_meta.sh mention the placeholder names on purpose, so
 # they are not in this list.)
-if grep -n '__[A-Z_]\{3,\}__' book.yaml index.html "$TITLE_PAGE"; then
+if grep -n '__[A-Z_]\{3,\}__' book.yaml "${FILL[@]}"; then
   echo
   echo "❌ Placeholders remain in the lines above. Fix them by hand." >&2
   exit 1
 fi
+
+[[ -d "manuscript/$LANGCODE" ]] || echo "⚠️  There is no manuscript/$LANGCODE/ folder yet — make one before building."
 
 cat <<EOF
 
