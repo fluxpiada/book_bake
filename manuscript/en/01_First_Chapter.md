@@ -1,6 +1,6 @@
 # Chapter I - The First One
 
-Chapters are the numbered files directly in `manuscript/`. The number sets the
+Chapters are the numbered files directly in `manuscript/en/`. The number sets the
 order, so `01_`, `02_`, `03_` is all the structure you need. Delete this file
 and write your own; nothing anywhere refers to it by name.
 

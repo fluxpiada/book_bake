@@ -5,6 +5,10 @@
 # EPUB, the PDF and the output filenames at once. There is no second place to
 # keep in sync.
 #
+# More than one language? Each lives in manuscript/<code>/, and a book.yaml
+# there overrides any key below for that language only — the title, the blurb,
+# the identifier. See "Another language" in README.md.
+#
 # The one exception is index.html, which GitHub Pages serves as a static file
 # and so cannot read anything at build time. ./setup.sh fills that in once.
 # =============================================================================
@@ -16,14 +20,17 @@ author-sort: "Author, A. N."         # library sort order, for the EPUB
 description: "One sentence about your book."
 rights:      "© 2026 A. N. Author"
 publisher:   "self-published"
+
+# The language built when you don't pass --lang: the manuscript/<code>/ folder.
 lang:        "en"
 
 # Output filenames are built from this. Keep it filesystem-safe: no spaces,
-# no slashes.  ->  versions/Your_Book_Title_v1.0.0.epub
+# no slashes.  ->  versions/Your_Book_Title_v1.0.0_en.epub
 slug:        "Your_Book_Title"
 
 # A unique, permanent id for the EPUB. ./setup.sh generates a real one.
 # Never copy another book's identifier — e-readers use it to tell books apart.
+# A translation is another book, so it needs its own too.
 identifier:  "urn:uuid:__UUID__"
 
 # --- Running header (Shunn format: "Surname / Keyword / Page") ----------------
@@ -36,6 +43,11 @@ github:
   repo:  "__GH_REPO__"
 
 cover: "images/cover.png"
+
+# --- Words the build writes into your book -----------------------------------
+# Translate these in manuscript/<code>/book.yaml for another language.
+wordcount-text: "about %s words"     # PDF cover sheet; %s is the rounded count
+edition-text:   "Current edition"    # last line of the EPUB's release history
 
 # --- The PDF cover sheet -----------------------------------------------------
 # Shunn puts your contact details in the upper-left of page one: legal name,

@@ -1,5 +1,5 @@
 <!--
-Front matter. Everything in manuscript/front/ goes into the EPUB and is left
+Front matter. Everything in manuscript/<lang>/front/ goes into the EPUB and is left
 out of the Shunn PDF, which starts at chapter one by design.
 
 Notes to yourself go in HTML comments like this one — pandoc drops them from
