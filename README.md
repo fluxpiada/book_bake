@@ -120,6 +120,28 @@ two as one book.
 
 Build it with `--lang=nl`. On a tag, CI builds every language on its own.
 
+## Getting template updates
+
+A repo made with **Use this template** is a copy with no link back, so GitHub
+never updates it for you. Two commands do.
+
+Once per book, tell Git where the template lives:
+
+```bash
+cd path/to/your-book
+git remote add template https://github.com/fluxpiada/book_bake.git
+```
+
+Each time the template changes:
+
+```bash
+git fetch template
+git checkout template/main -- lib epub pdf .github wiki .gitignore
+```
+
+That replaces only the tooling. Your chapters, `book.yaml`, `index.html` and
+this README are never touched. Build once to check, then commit.
+
 ## Writing conventions
 
 | You write | You get |
